@@ -1,11 +1,19 @@
 import React from 'react';
-import {Link} from "react-router-dom";
+import {BrowserRouter as Link} from "react-router-dom";
 
 class Menu extends React.Component {
 
+    constructor(props){
+        super(props);
+    }
+
     render() {
         return (
-            <li><Link to={this.props.to}>{this.props.name}</Link></li>
+            <ul>
+                {this.props.children.map( (item,key) => {
+                    return <li key={key}>{item}</li>;
+                } )}
+            </ul>
         )
     }
 }

@@ -1,26 +1,37 @@
 import React from 'react';
-import {BrowserRouter as Redirect} from "react-router-dom";
+import {Route, Redirect} from "react-router-dom";
 import credentials from "../config/credentials.js";
+import Dashboard from "./DashboardComponent";
 
 
 class Login extends React.Component {
 
     constructor(props){
         super(props);
-        console.log(credentials);
         this.state = ({
             username : '',
             password : '',
             error: false,
             log: false
         })
+
+        if(this.props.location){
+            if(this.props.location.pathname === '/logout'){
+                localStorage.removeItem('logCheck');
+                if(this.props.onLog){
+                    this.props.onLog(false);
+                }
+            }
+        }
     }
 
     handleSumit = (e) => {
         e.preventDefault();
         if (credentials.username === this.state.username && credentials.password === this.state.password)
         {
-            this.setState({error: false, log: true})
+            this.setState({error: false, log: true});
+            localStorage.setItem('logCheck', credentials.username);
+            this.props.onLog(credentials.username);
         }
         else
         {
@@ -34,15 +45,28 @@ class Login extends React.Component {
             this.setState({ password : e.target.value }) ;
     }
 
-
     render() {
-
         return(
 
             this.state.log ?
+
+
+            <Route>
                 <Redirect
-                    to={{pathname : '/', state : { from : "/login"}}}
+                    to={{pathname : '/dashboard', state : { from : "/login"}}}
                 />
+            </Route>
+
+
+             :
+
+
+            this.state.log ?
+                <Route>
+                    <Redirect
+                        to={{pathname : '/dashboard', state : { from : "/login"}}}
+                    />
+                </Route>
                 :
                 <div>
                     <div>
@@ -62,7 +86,9 @@ class Login extends React.Component {
                         </p>
                     </form>
                 </div>
-        );
+
+            );
+
     }
 }
 

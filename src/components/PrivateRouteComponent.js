@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as  Route, Redirect} from "react-router-dom";
+import {Route, Redirect} from "react-router-dom";
 
 import Dashboard from './DashboardComponent';
 
@@ -9,13 +9,11 @@ class PrivateRoute extends React.Component {
 
         const { ...rest } = this.props;
 
-        console.log("->"+this.props)
-
         return (
             <Route
                 { ...rest }
                 render={ (rest) =>
-                    rest.isLogged ? <Dashboard { ...rest } /> :
+                    localStorage.getItem('logCheck') ? <Dashboard { ...rest } /> :
                         <Redirect
                             to={{pathname : '/login', state : { from : "/"}}}
                         />
